@@ -1,0 +1,53 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+header {
+    background: #071b44;
+    color: white;
+    padding: 25px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+section {
+    padding: 70px 8%;
+}
+
+#accueil {
+    background: white;
+    min-height: 350px;
+}
+
+#accueil h2 {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: #071b44;
+}
+
+#accueil h3 {
+    color: #1e88ff;
+    margin-bottom: 15px;
+}
+
+#accueil p {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
