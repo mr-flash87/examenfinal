@@ -1,7 +1,9 @@
 const express = require("express");
 const path = require("path");
+const db = require("./database/db");
 
 const app = express();
+app.use(express.json());
 const PORT = 3000;
 
 // Autoriser la lecture des données JSON
@@ -15,6 +17,62 @@ app.get("/api/test", (req, res) => {
     res.json({
         message: "Mon serveur fonctionne correctement !"
     });
+});
+
+// Récupérer les informations du profil
+app.get("/api/profil", (req, res) => {
+    const profil = db.prepare(
+        "SELECT * FROM profil ORDER BY id DESC LIMIT 1"
+    ).get();
+    res.json(profil);
+});
+// Enregistrer les message de contact
+app.post("/api/message", (req, res) => {
+    const { nom, email, sujet, message } = req.body;
+    if (!nom || !email || !sujet || !message) {
+        return res.status(400).json({
+            message: "Tous les champs sont obligatoires."
+        });
+    }
+    try {
+        const resultat = db.prepare(`
+            INSERT INTO contact (nom, email, sujet, message)
+            VALUES (?, ?, ?, ?)
+        `).run(nom, email, sujet, message);
+        res.status(201).json({
+            message: "Message enregistré avec succès !",
+            id: resultat.lastInsertRowid
+        });
+    } catch (erreur) {
+        console.error("Erreur lors de l'enregistrement du message :", erreur);
+        res.status(500).json({
+            message: "Erreur interne du serveur."
+        });
+    }
+});
+//Enregistrer un message de contact
+app.post("/api/contact", (req, res) => {
+    const { nom, email,sujet, message } = req.body;
+    if (!nom || !email || !sujet || !message) {
+        return res.status(400).json({
+            message: "Tous les champs sont obligatoires."
+        });
+    }
+    const resultat = db.prepare(`
+        INSERT INTO contact (nom, email, sujet, message)
+        VALUES (?, ?, ?, ?)
+    `).run(nom, email, sujet|| "", message);
+    res.status(201).json({
+        message: "Message enregistré avec succès !",
+        id: resultat.lastInsertRowid
+    });
+});
+// Récupérer tous les projets
+app.get("/api/projets", (req, res) => {
+    const projets = db.prepare(
+        "SELECT * FROM projets ORDER BY id DESC"
+    ).all();
+    res.json(projets);
 });
 
 // Démarrer le serveur

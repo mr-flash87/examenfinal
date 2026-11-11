@@ -1,0 +1,47 @@
+
+ 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Mon Portfolio</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Administration</h1>
+        <nav>
+            <a href="/">Voir le portfolio</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Ajouter un projet</h2>
+
+            <form id="form-projet">
+                <input type="text" id="titre" placeholder="Titre du projet" required>
+
+                <textarea id="description" placeholder="Description" required></textarea>
+
+                <input type="text" id="technologies" placeholder="Technologies utilisées">
+
+                <input type="url" id="lien" placeholder="Lien du projet">
+
+                <button type="submit">Ajouter le projet</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Mes projets enregistrés</h2>
+            <div id="liste-projets"></div>
+        </section>
+    </main>
+
+    <script src="js/admin.js"></script>
+
+</body>
+</html>
+
