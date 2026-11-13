@@ -892,3 +892,237 @@ textarea {
         grid-template-columns: 1fr;
     }
 }
+
+/* =====================================
+   AMELIORATION DU DESIGN ADMINISTRATION
+===================================== */
+
+/* Arrière-plan de l'administration */
+body:has(#statistiques) {
+    background: #f4f7fc;
+    color: #172033;
+}
+
+/* En-tête administration */
+body:has(#statistiques) header {
+    background: #071b44;
+    color: white;
+    padding: 25px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: 0 4px 20px rgba(7, 27, 68, 0.12);
+}
+
+body:has(#statistiques) header h1 {
+    font-size: 25px;
+    font-weight: 800;
+}
+
+body:has(#statistiques) header a {
+    color: white;
+    background: #1e88ff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+body:has(#statistiques) header a:hover {
+    background: #0872ed;
+    transform: translateY(-2px);
+}
+
+/* Contenu principal */
+body:has(#statistiques) main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 35px 25px 60px;
+}
+
+/* Sections */
+body:has(#statistiques) main section {
+    background: white;
+    padding: 28px;
+    margin-bottom: 28px;
+    border-radius: 16px;
+    border: 1px solid #e5eaf2;
+    box-shadow: 0 5px 20px rgba(15, 35, 70, 0.04);
+}
+
+body:has(#statistiques) main section h2 {
+    color: #071b44;
+    font-size: 21px;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5eaf2;
+}
+
+/* Cartes statistiques */
+body:has(#statistiques) .cartes-statistiques {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin: 0;
+}
+
+body:has(#statistiques) .carte-statistique {
+    border: 1px solid #e5eaf2;
+    border-radius: 14px;
+    padding: 25px 15px;
+    box-shadow: 0 5px 18px rgba(15, 35, 70, 0.05);
+    transition: 0.3s;
+}
+
+body:has(#statistiques) .carte-statistique:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(15, 35, 70, 0.09);
+}
+
+body:has(#statistiques) .carte-statistique h3 {
+    font-size: 34px;
+    font-weight: 800;
+    color: #1e88ff;
+}
+
+body:has(#statistiques) .carte-statistique p {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* Formulaires administration */
+body:has(#statistiques) main form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+body:has(#statistiques) main input,
+body:has(#statistiques) main textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #dfe6f0;
+    border-radius: 9px;
+    background: #f8fafc;
+    color: #172033;
+    outline: none;
+    transition: 0.3s;
+}
+
+body:has(#statistiques) main input:focus,
+body:has(#statistiques) main textarea:focus {
+    border-color: #1e88ff;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(30, 136, 255, 0.10);
+}
+
+body:has(#statistiques) main textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* Boutons */
+body:has(#statistiques) main button {
+    align-self: flex-start;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #1e88ff;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+body:has(#statistiques) main button:hover {
+    background: #0872ed;
+    transform: translateY(-2px);
+}
+
+/* Cartes des projets, compétences et messages */
+body:has(#statistiques) .carte-message {
+    border: 1px solid #e5eaf2;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 5px 18px rgba(15, 35, 70, 0.04);
+    transition: 0.3s;
+}
+
+body:has(#statistiques) .carte-message:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(15, 35, 70, 0.08);
+}
+
+/* Listes */
+body:has(#statistiques) #liste-projets,
+body:has(#statistiques) #liste-competences-admin,
+body:has(#statistiques) #liste-messages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+/* Boutons des cartes */
+body:has(#statistiques) .carte-message button {
+    margin: 8px 6px 0 0;
+}
+
+body:has(#statistiques) .carte-message button:last-child {
+    background: #dc3545;
+}
+
+body:has(#statistiques) .carte-message button:last-child:hover {
+    background: #b91c1c;
+}
+
+/* Responsive tablette */
+@media (max-width: 850px) {
+    body:has(#statistiques) .cartes-statistiques {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Responsive téléphone */
+@media (max-width: 600px) {
+    body:has(#statistiques) main {
+        padding: 20px 14px 40px;
+    }
+
+    body:has(#statistiques) main section {
+        padding: 20px 16px;
+        margin-bottom: 20px;
+    }
+
+    body:has(#statistiques) header {
+        padding: 20px;
+    }
+
+    body:has(#statistiques) header h1 {
+        font-size: 21px;
+    }
+
+    body:has(#statistiques) .cartes-statistiques {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    body:has(#statistiques) .carte-statistique {
+        padding: 18px 10px;
+    }
+
+    body:has(#statistiques) .carte-statistique h3 {
+        font-size: 27px;
+    }
+
+    body:has(#statistiques) #liste-projets,
+    body:has(#statistiques) #liste-competences-admin,
+    body:has(#statistiques) #liste-messages {
+        grid-template-columns: 1fr;
+    }
+
+    body:has(#statistiques) main button {
+        max-width: 100%;
+    }
+}
