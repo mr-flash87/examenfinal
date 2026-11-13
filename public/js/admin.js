@@ -4,6 +4,7 @@ console.log("admin.js chargé");
 
 const formulaire = document.getElementById("form-projet");
 const liste = document.getElementById("liste-projets");
+let projetEnCoursEdition = null;
 
 
 // CHARGER LES PROJETS
@@ -130,60 +131,71 @@ formulaire.addEventListener("submit", async (event) => {
 
 
 
-// MODIFIER UN PROJET
-async function modifierProjet(projet) {
 
+// OUVRIR LE FORMULAIRE DE MODIFICATION
+function modifierProjet(projet) {
+    projetEnCoursEdition = projet.id;
 
-    const titre = prompt("Nouveau titre :", projet.titre);
+    document.getElementById("edit-titre").value = projet.titre;
+    document.getElementById("edit-description").value = projet.description;
+    document.getElementById("edit-technologies").value = projet.technologies || "";
+    document.getElementById("edit-lien").value = projet.lien || "";
 
+    document.getElementById("edition-projet").hidden = false;
 
-    if (titre === null || titre.trim() === "") return;
+    document.getElementById("edition-projet").scrollIntoView({
+        behavior: "smooth"
+    });
+}
 
+// ENREGISTRER LES MODIFICATIONS
+document.getElementById("form-edition-projet").addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    const description = prompt("Nouvelle description :", projet.description);
+    if (projetEnCoursEdition === null) return;
 
-
-    if (description === null || description.trim() === "") return;
-
-
-    const technologies = prompt("Technologies :", projet.technologies || "");
-
-
-    if (technologies === null) return;
-
-
-    const lien = prompt("Lien :", projet.lien || "");
-
-
-    if (lien === null) return;
-
+    const projetModifie = {
+        titre: document.getElementById("edit-titre").value.trim(),
+        description: document.getElementById("edit-description").value.trim(),
+        technologies: document.getElementById("edit-technologies").value.trim(),
+        lien: document.getElementById("edit-lien").value.trim()
+    };
 
     try {
-        const reponse = await fetch(`/api/projets/${projet.id}`, {
+        const reponse = await fetch(`/api/projets/${projetEnCoursEdition}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                titre,
-                description,
-                technologies,
-                lien
-            })
+            body: JSON.stringify(projetModifie)
         });
 
-
         const resultat = await reponse.json();
-        alert(resultat.message);
 
+        alert(resultat.message || "Projet modifié.");
 
-        if (reponse.ok) chargerProjets();
+        if (reponse.ok) {
+            document.getElementById("form-edition-projet").reset();
+            document.getElementById("edition-projet").hidden = true;
 
+            projetEnCoursEdition = null;
+
+            chargerProjets();
+            chargerStatistiques();
+        }
 
     } catch (erreur) {
-        console.error(erreur);
+        console.error("Erreur de modification :", erreur);
+        alert("Impossible de contacter le serveur.");
     }
-}
+});
+
+// ANNULER LA MODIFICATION
+document.getElementById("annuler-edition").addEventListener("click", () => {
+    document.getElementById("form-edition-projet").reset();
+    document.getElementById("edition-projet").hidden = true;
+    projetEnCoursEdition = null;
+});
 
 
 

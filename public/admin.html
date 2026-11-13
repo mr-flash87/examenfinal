@@ -168,6 +168,46 @@
             </div>
         </section>
 
+<!-- FORMULAIRE DE MODIFICATION D'UN PROJET -->
+<section id="edition-projet" hidden>
+    <h2>Modifier le projet</h2>
+
+    <form id="form-edition-projet">
+
+        <input
+            type="text"
+            id="edit-titre"
+            placeholder="Titre du projet"
+            required
+        >
+
+        <textarea
+            id="edit-description"
+            placeholder="Description du projet"
+            required
+        ></textarea>
+
+        <input
+            type="text"
+            id="edit-technologies"
+            placeholder="Technologies utilisées"
+        >
+
+        <input
+            type="url"
+            id="edit-lien"
+            placeholder="Lien du projet"
+        >
+
+        <button type="submit">Enregistrer les modifications</button>
+
+        <button type="button" id="annuler-edition">
+            Annuler
+        </button>
+
+    </form>
+</section>
+
         <!-- MESSAGES RECUS -->
         <section>
             <h2>Messages reçus</h2>

@@ -4,36 +4,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion administrateur</title>
+    <title>Connexion administrateur - Mon Portfolio</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="login-page">
 
-    <main>
-        <section>
-            <h1>Administration</h1>
+    <main class="login-container">
+
+        <section class="login-card">
+
+            <div class="login-header">
+                <div class="login-icon">A</div>
+                <h1>Administration</h1>
+                <p>Bienvenue dans votre espace administrateur</p>
+            </div>
+
+            <div class="login-divider"></div>
+
             <h2>Connexion</h2>
+            <p class="login-description">
+                Connectez-vous pour gérer votre portfolio.
+            </p>
 
             <form id="form-login">
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Nom d'utilisateur"
-                    required
-                >
 
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Mot de passe"
-                    required
-                >
+                <div class="login-field">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Votre nom d'utilisateur"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="login-field">
+                    <label for="password">Mot de passe</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Votre mot de passe"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
 
                 <button type="submit">Se connecter</button>
+
             </form>
 
             <p id="message"></p>
+
+            <a href="/" class="login-back">
+                Retour au portfolio
+            </a>
+
         </section>
+
+        <footer class="login-footer">
+            © 2026 Mon Portfolio — Espace sécurisé
+        </footer>
+
     </main>
 
     <script src="js/login.js"></script>

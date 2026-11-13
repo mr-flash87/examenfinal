@@ -1,17 +1,56 @@
 
+/* =========================================
+   1. CONFIGURATION ET IMPORTATIONS
+========================================= */
+
 require("dotenv").config({
     path: require("path").join(__dirname, ".env")
 });
-console.log("ADMIN_USER chargé :", !!process.env.ADMIN_USER);
-console.log("ADMIN_PASSWORD chargé :", !!process.env.ADMIN_PASSWORD);
-console.log("SESSION_SECRET chargé :", !!process.env.SESSION_SECRET);
+
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
 const db = require("./database/db");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// Vérification des variables d'environnement
+if (!process.env.SESSION_SECRET) {
+    throw new Error("SESSION_SECRET manquant dans le fichier .env");
+}
+
+if (!process.env.ADMIN_USER || !process.env.ADMIN_PASSWORD) {
+    throw new Error("Identifiants administrateur manquants dans le fichier .env");
+}
+
+// Configuration HTTPS en production
+const production = process.env.NODE_ENV === "production";
+
+if (production) {
+    app.set("trust proxy", 1);
+}
+
+
+/* =========================================
+   2. MIDDLEWARES
+========================================= */
+
+app.use(express.json({ limit: "100kb" }));
+
+app.use(session({
+    name: "connect.sid",
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: production,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 2
+    }
+}));
+
 
 // Vérifier si l'administrateur est connecté
 function requireAdmin(req, res, next) {
@@ -24,27 +63,8 @@ function requireAdmin(req, res, next) {
     });
 }
 
-// ================================
-// CONFIGURATION
-// ================================
 
-app.use(express.json());
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        secure: false,
-        maxAge: 1000 * 60 * 60 * 2
-    }
-}));
-
-// ================================
-// PROTECTION ADMINISTRATEUR
-// ================================
-
+// Protection des pages et API administrateur
 function verifierAdmin(req, res, next) {
     if (req.session && req.session.admin === true) {
         return next();
@@ -59,18 +79,27 @@ function verifierAdmin(req, res, next) {
     return res.redirect("/login.html");
 }
 
-// ================================
-// CONNEXION ADMINISTRATEUR
-// ================================
+
+/* =========================================
+   3. CONNEXION ADMINISTRATEUR
+========================================= */
 
 app.post("/api/login", (req, res) => {
-    console.log("Demande de connexion reçue !");
-    const { username, password } = req.body;
-    console.log("Utilisateur reçu :", username);
-console.log("Utilisateur configuré :", process.env.ADMIN_USER);
+    const { username, password } = req.body || {};
+
+    if (
+        typeof username !== "string" ||
+        typeof password !== "string" ||
+        !username.trim() ||
+        !password
+    ) {
+        return res.status(400).json({
+            message: "Veuillez remplir tous les champs."
+        });
+    }
 
     const utilisateurValide =
-        username === process.env.ADMIN_USER;
+        username.trim() === process.env.ADMIN_USER;
 
     const motDePasseValide =
         password === process.env.ADMIN_PASSWORD;
@@ -81,29 +110,40 @@ console.log("Utilisateur configuré :", process.env.ADMIN_USER);
         });
     }
 
-    req.session.admin = true;
+    // Renouveler la session après connexion
+    req.session.regenerate((erreur) => {
+        if (erreur) {
+            console.error("Erreur de création de session :", erreur);
 
-console.log("Connexion administrateur réussie.");
-console.log("Session :", req.session);
+            return res.status(500).json({
+                message: "Impossible de créer la session."
+            });
+        }
 
-    req.session.save((erreur) => {
-    if (erreur) {
-        console.error("Erreur de sauvegarde de session :", erreur);
+        req.session.admin = true;
 
-        return res.status(500).json({
-            message: "Impossible de sauvegarder la session."
+        req.session.save((erreurSauvegarde) => {
+            if (erreurSauvegarde) {
+                console.error("Erreur de sauvegarde de session :", erreurSauvegarde);
+
+                return res.status(500).json({
+                    message: "Impossible de sauvegarder la session."
+                });
+            }
+
+            console.log("Connexion administrateur réussie.");
+
+            res.json({
+                message: "Connexion réussie !"
+            });
         });
-    }
-
-    res.json({
-        message: "Connexion réussie !"
     });
 });
-});
 
-// ================================
-// DÉCONNEXION ADMINISTRATEUR
-// ================================
+
+/* =========================================
+   4. DÉCONNEXION ADMINISTRATEUR
+========================================= */
 
 app.post("/api/logout", verifierAdmin, (req, res) => {
     req.session.destroy((erreur) => {
@@ -113,7 +153,12 @@ app.post("/api/logout", verifierAdmin, (req, res) => {
             });
         }
 
-        res.clearCookie("connect.sid");
+        res.clearCookie("connect.sid", {
+            path: "/",
+            httpOnly: true,
+            secure: production,
+            sameSite: "lax"
+        });
 
         res.json({
             message: "Déconnexion réussie."
@@ -121,20 +166,26 @@ app.post("/api/logout", verifierAdmin, (req, res) => {
     });
 });
 
-// ================================
-// PROTECTION DE LA PAGE ADMIN
-// ================================
+
+/* =========================================
+   5. PROTECTION DE LA PAGE ADMIN
+========================================= */
 
 app.get("/admin.html", verifierAdmin, (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// Fichiers publics : CSS, JavaScript, images, etc.
+
+/* =========================================
+   6. FICHIERS PUBLICS
+========================================= */
+
 app.use(express.static(path.join(__dirname, "public")));
 
-// ================================
-// ROUTE DE TEST
-// ================================
+
+/* =========================================
+   7. ROUTE DE TEST
+========================================= */
 
 app.get("/api/test", (req, res) => {
     res.json({
@@ -142,11 +193,12 @@ app.get("/api/test", (req, res) => {
     });
 });
 
-// ================================
-// GESTION DU PROFIL
-// ================================
 
-// Récupérer le profil (public)
+/* =========================================
+   8. GESTION DU PROFIL
+========================================= */
+
+// Récupérer le profil
 app.get("/api/profil", (req, res) => {
     try {
         const profil = db.prepare(
@@ -164,12 +216,18 @@ app.get("/api/profil", (req, res) => {
     }
 });
 
-// Ajouter ou modifier le profil (administrateur uniquement)
+
+// Ajouter ou modifier le profil
 app.post("/api/profil", verifierAdmin, (req, res) => {
     try {
-        const { nom, titre, description, email } = req.body;
+        const { nom, titre, description, email } = req.body || {};
 
-        if (!nom || !titre) {
+        if (
+            typeof nom !== "string" ||
+            typeof titre !== "string" ||
+            !nom.trim() ||
+            !titre.trim()
+        ) {
             return res.status(400).json({
                 message: "Le nom et le titre sont obligatoires."
             });
@@ -185,8 +243,8 @@ app.post("/api/profil", verifierAdmin, (req, res) => {
                 SET nom = ?, titre = ?, description = ?, email = ?
                 WHERE id = ?
             `).run(
-                nom,
-                titre,
+                nom.trim(),
+                titre.trim(),
                 description || "",
                 email || "",
                 profilExistant.id
@@ -200,7 +258,12 @@ app.post("/api/profil", verifierAdmin, (req, res) => {
         db.prepare(`
             INSERT INTO profil (nom, titre, description, email)
             VALUES (?, ?, ?, ?)
-        `).run(nom, titre, description || "", email || "");
+        `).run(
+            nom.trim(),
+            titre.trim(),
+            description || "",
+            email || ""
+        );
 
         res.json({
             message: "Profil enregistré avec succès !"
@@ -215,11 +278,12 @@ app.post("/api/profil", verifierAdmin, (req, res) => {
     }
 });
 
-// ================================
-// GESTION DES PROJETS
-// ================================
 
-// Récupérer les projets (public)
+/* =========================================
+   9. GESTION DES PROJETS
+========================================= */
+
+// Récupérer les projets
 app.get("/api/projets", (req, res) => {
     try {
         const projets = db.prepare(
@@ -237,12 +301,18 @@ app.get("/api/projets", (req, res) => {
     }
 });
 
-// Ajouter un projet (administrateur uniquement)
+
+// Ajouter un projet
 app.post("/api/projets", verifierAdmin, (req, res) => {
     try {
-        const { titre, description, technologies, lien } = req.body;
+        const { titre, description, technologies, lien } = req.body || {};
 
-        if (!titre || !description) {
+        if (
+            typeof titre !== "string" ||
+            typeof description !== "string" ||
+            !titre.trim() ||
+            !description.trim()
+        ) {
             return res.status(400).json({
                 message: "Le titre et la description sont obligatoires."
             });
@@ -252,8 +322,8 @@ app.post("/api/projets", verifierAdmin, (req, res) => {
             INSERT INTO projets (titre, description, technologies, lien)
             VALUES (?, ?, ?, ?)
         `).run(
-            titre,
-            description,
+            titre.trim(),
+            description.trim(),
             technologies || "",
             lien || ""
         );
@@ -272,13 +342,21 @@ app.post("/api/projets", verifierAdmin, (req, res) => {
     }
 });
 
-// Modifier un projet (administrateur uniquement)
+
+// Modifier un projet
 app.put("/api/projets/:id", verifierAdmin, (req, res) => {
     try {
-        const { titre, description, technologies, lien } = req.body;
+        const { titre, description, technologies, lien } = req.body || {};
         const id = Number(req.params.id);
 
-        if (!titre || !description || !Number.isInteger(id)) {
+        if (
+            !Number.isInteger(id) ||
+            id <= 0 ||
+            typeof titre !== "string" ||
+            typeof description !== "string" ||
+            !titre.trim() ||
+            !description.trim()
+        ) {
             return res.status(400).json({
                 message: "Données invalides."
             });
@@ -289,8 +367,8 @@ app.put("/api/projets/:id", verifierAdmin, (req, res) => {
             SET titre = ?, description = ?, technologies = ?, lien = ?
             WHERE id = ?
         `).run(
-            titre,
-            description,
+            titre.trim(),
+            description.trim(),
             technologies || "",
             lien || "",
             id
@@ -315,12 +393,13 @@ app.put("/api/projets/:id", verifierAdmin, (req, res) => {
     }
 });
 
-// Supprimer un projet (administrateur uniquement)
+
+// Supprimer un projet
 app.delete("/api/projets/:id", verifierAdmin, (req, res) => {
     try {
         const id = Number(req.params.id);
 
-        if (!Number.isInteger(id)) {
+        if (!Number.isInteger(id) || id <= 0) {
             return res.status(400).json({
                 message: "Identifiant invalide."
             });
@@ -349,16 +428,24 @@ app.delete("/api/projets/:id", verifierAdmin, (req, res) => {
     }
 });
 
-// ================================
-// GESTION DES MESSAGES
-// ================================
 
-// Enregistrer un message de contact (public)
+/* =========================================
+   10. GESTION DES MESSAGES
+========================================= */
+
+// Enregistrer un message de contact
 function enregistrerMessage(req, res) {
     try {
-        const { nom, email, sujet, message } = req.body;
+        const { nom, email, sujet, message } = req.body || {};
 
-        if (!nom || !email || !message) {
+        if (
+            typeof nom !== "string" ||
+            typeof email !== "string" ||
+            typeof message !== "string" ||
+            !nom.trim() ||
+            !email.trim() ||
+            !message.trim()
+        ) {
             return res.status(400).json({
                 message: "Le nom, l'email et le message sont obligatoires."
             });
@@ -367,7 +454,12 @@ function enregistrerMessage(req, res) {
         const resultat = db.prepare(`
             INSERT INTO messages (nom, email, sujet, message)
             VALUES (?, ?, ?, ?)
-        `).run(nom, email, sujet || "", message);
+        `).run(
+            nom.trim(),
+            email.trim(),
+            sujet || "",
+            message.trim()
+        );
 
         res.status(201).json({
             message: "Message enregistré avec succès !",
@@ -383,11 +475,13 @@ function enregistrerMessage(req, res) {
     }
 }
 
+
 // Compatibilité avec les deux URL de contact
 app.post("/api/contact", enregistrerMessage);
 app.post("/api/message", enregistrerMessage);
 
-// Récupérer les messages (administrateur uniquement)
+
+// Récupérer les messages
 app.get("/api/messages", verifierAdmin, (req, res) => {
     try {
         const messages = db.prepare(
@@ -405,12 +499,13 @@ app.get("/api/messages", verifierAdmin, (req, res) => {
     }
 });
 
-// Supprimer un message (administrateur uniquement)
+
+// Supprimer un message
 app.delete("/api/messages/:id", verifierAdmin, (req, res) => {
     try {
         const id = Number(req.params.id);
 
-        if (!Number.isInteger(id)) {
+        if (!Number.isInteger(id) || id <= 0) {
             return res.status(400).json({
                 message: "Identifiant invalide."
             });
@@ -439,7 +534,11 @@ app.delete("/api/messages/:id", verifierAdmin, (req, res) => {
     }
 });
 
- // STATISTIQUES DU TABLEAU DE BORD
+
+/* =========================================
+   11. STATISTIQUES DU TABLEAU DE BORD
+========================================= */
+
 app.get("/api/admin/statistiques", verifierAdmin, (req, res) => {
     try {
         const nombreProjets = db.prepare(
@@ -470,11 +569,11 @@ app.get("/api/admin/statistiques", verifierAdmin, (req, res) => {
 });
 
 
-// ======================================
-// GESTION DES COMPETENCES
-// ======================================
+/* =========================================
+   12. GESTION DES COMPÉTENCES
+========================================= */
 
-// Récupérer toutes les compétences
+// Récupérer les compétences
 app.get("/api/competences", (req, res) => {
     try {
         const competences = db.prepare(
@@ -485,18 +584,25 @@ app.get("/api/competences", (req, res) => {
 
     } catch (erreur) {
         console.error(erreur);
+
         res.status(500).json({
             message: "Impossible de récupérer les compétences."
         });
     }
 });
 
+
 // Ajouter une compétence
 app.post("/api/competences", requireAdmin, (req, res) => {
     try {
-        const { titre, description, categorie } = req.body;
+        const { titre, description, categorie } = req.body || {};
 
-        if (!titre || !description) {
+        if (
+            typeof titre !== "string" ||
+            typeof description !== "string" ||
+            !titre.trim() ||
+            !description.trim()
+        ) {
             return res.status(400).json({
                 message: "Le titre et la description sont obligatoires."
             });
@@ -505,7 +611,11 @@ app.post("/api/competences", requireAdmin, (req, res) => {
         const resultat = db.prepare(`
             INSERT INTO competences (titre, description, categorie)
             VALUES (?, ?, ?)
-        `).run(titre, description, categorie || "");
+        `).run(
+            titre.trim(),
+            description.trim(),
+            categorie || ""
+        );
 
         res.status(201).json({
             message: "Compétence ajoutée avec succès !",
@@ -514,23 +624,43 @@ app.post("/api/competences", requireAdmin, (req, res) => {
 
     } catch (erreur) {
         console.error(erreur);
+
         res.status(500).json({
             message: "Erreur lors de l'ajout."
         });
     }
 });
 
+
 // Modifier une compétence
 app.put("/api/competences/:id", requireAdmin, (req, res) => {
     try {
-        const { titre, description, categorie } = req.body;
+        const { titre, description, categorie } = req.body || {};
         const id = Number(req.params.id);
+
+        if (
+            !Number.isInteger(id) ||
+            id <= 0 ||
+            typeof titre !== "string" ||
+            typeof description !== "string" ||
+            !titre.trim() ||
+            !description.trim()
+        ) {
+            return res.status(400).json({
+                message: "Données invalides."
+            });
+        }
 
         const resultat = db.prepare(`
             UPDATE competences
             SET titre = ?, description = ?, categorie = ?
             WHERE id = ?
-        `).run(titre, description, categorie || "", id);
+        `).run(
+            titre.trim(),
+            description.trim(),
+            categorie || "",
+            id
+        );
 
         if (resultat.changes === 0) {
             return res.status(404).json({
@@ -544,16 +674,24 @@ app.put("/api/competences/:id", requireAdmin, (req, res) => {
 
     } catch (erreur) {
         console.error(erreur);
+
         res.status(500).json({
             message: "Erreur lors de la modification."
         });
     }
 });
 
+
 // Supprimer une compétence
 app.delete("/api/competences/:id", requireAdmin, (req, res) => {
     try {
         const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+                message: "Identifiant invalide."
+            });
+        }
 
         const resultat = db.prepare(
             "DELETE FROM competences WHERE id = ?"
@@ -571,15 +709,17 @@ app.delete("/api/competences/:id", requireAdmin, (req, res) => {
 
     } catch (erreur) {
         console.error(erreur);
+
         res.status(500).json({
             message: "Erreur lors de la suppression."
         });
     }
 });
 
-// ================================
-// DÉMARRAGE DU SERVEUR
-// ================================
+
+/* =========================================
+   13. DÉMARRAGE DU SERVEUR
+========================================= */
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);

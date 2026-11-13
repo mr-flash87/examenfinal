@@ -1126,3 +1126,269 @@ body:has(#statistiques) .carte-message button:last-child:hover {
         max-width: 100%;
     }
 }
+
+/* =====================================
+   NOUVEAU DESIGN DES CARTES PROJETS
+===================================== */
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
+}
+
+.project-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 32px;
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(15, 35, 70, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+                border-color 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-7px);
+    border-color: #1e88ff;
+    box-shadow: 0 18px 40px rgba(15, 35, 70, 0.10);
+}
+
+.project-card h3 {
+    color: #071b44;
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.4;
+    margin-bottom: 14px;
+    overflow-wrap: anywhere;
+}
+
+.project-card p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    overflow-wrap: anywhere;
+}
+
+.project-card .project-technologies {
+    display: inline-block;
+    padding: 8px 13px;
+    background: #eaf3ff;
+    color: #1e70d1;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.project-card .project-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+    background: #1e88ff;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.project-card .project-link:hover {
+    background: #0872ed;
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVE TABLETTE */
+@media (max-width: 850px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .project-card {
+        padding: 24px;
+    }
+}
+
+/* RESPONSIVE TELEPHONE */
+@media (max-width: 600px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .project-card {
+        padding: 23px;
+        border-radius: 14px;
+    }
+
+    .project-card h3 {
+        font-size: 20px;
+    }
+}
+
+/* =====================================
+   PAGE DE CONNEXION ADMINISTRATEUR
+===================================== */
+
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #071b44, #123b70);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    margin: auto;
+}
+
+.login-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.login-header {
+    text-align: center;
+}
+
+.login-icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e88ff;
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 800;
+    border-radius: 18px;
+}
+
+.login-header h1 {
+    color: #071b44;
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.login-header p,
+.login-description {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.login-divider {
+    height: 1px;
+    background: #e5eaf2;
+    margin: 28px 0;
+}
+
+.login-card h2 {
+    color: #071b44;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.login-description {
+    margin-bottom: 25px;
+}
+
+.login-field {
+    margin-bottom: 20px;
+}
+
+.login-field label {
+    display: block;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 9px;
+}
+
+.login-field input {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #dbe2ea;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.login-field input:focus {
+    border-color: #1e88ff;
+    box-shadow: 0 0 0 3px rgba(30, 136, 255, 0.12);
+}
+
+.login-card form button {
+    width: 100%;
+    padding: 15px;
+    background: #1e88ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-card form button:hover {
+    background: #0872ed;
+    transform: translateY(-2px);
+}
+
+#message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.login-back {
+    display: block;
+    margin-top: 25px;
+    text-align: center;
+    color: #1e88ff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.login-back:hover {
+    text-decoration: underline;
+}
+
+.login-footer {
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    font-size: 12px;
+    margin-top: 25px;
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 28px 22px;
+        border-radius: 16px;
+    }
+
+    .login-header h1 {
+        font-size: 23px;
+    }
+}

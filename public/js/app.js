@@ -18,22 +18,31 @@ async function chargerProfil() {
     }
 }
 
-// CHARGER LES PROJETS
+
+ // CHARGER LES PROJETS
 async function chargerProjets() {
     try {
         const reponse = await fetch("/api/projets");
-        const projets = await reponse.json();
 
+        if (!reponse.ok) {
+            throw new Error("Impossible de charger les projets.");
+        }
+
+        const projets = await reponse.json();
         const liste = document.getElementById("liste-projets");
+
+        if (!liste) return;
+
         liste.innerHTML = "";
 
         if (projets.length === 0) {
-            liste.textContent = "Aucun projet disponible.";
+            liste.textContent = "Aucun projet disponible pour le moment.";
             return;
         }
 
         projets.forEach(projet => {
             const article = document.createElement("article");
+            article.className = "project-card";
 
             const titre = document.createElement("h3");
             titre.textContent = projet.titre;
@@ -42,11 +51,25 @@ async function chargerProjets() {
             description.textContent = projet.description;
 
             const technologies = document.createElement("p");
-            technologies.textContent = projet.technologies || "";
+            technologies.className = "project-technologies";
+            technologies.textContent = projet.technologies || "Technologies non précisées";
 
             article.append(titre, description, technologies);
+
+            if (projet.lien) {
+                const lien = document.createElement("a");
+                lien.href = projet.lien;
+                lien.textContent = "Voir le projet";
+                lien.target = "_blank";
+                lien.rel = "noopener noreferrer";
+                lien.className = "project-link";
+
+                article.appendChild(lien);
+            }
+
             liste.appendChild(article);
         });
+
     } catch (erreur) {
         console.error("Erreur de chargement des projets :", erreur);
     }
