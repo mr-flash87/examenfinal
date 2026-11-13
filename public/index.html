@@ -1,47 +1,296 @@
+
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mon PORTFOLIO</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <header>
-        <h1>Bienvenue sur mon PORTFOLIO</h1>
-        <nav>
-            <a href="#accueil">Accueil</a>
-            <a href="#projets">Projets</a>
-            <a href="#contact">Contact</a>
-        </nav>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Portfolio professionnel d'Alassane Sedgo, technicien supérieur en réseaux informatiques et passionné de développement web.">
+
+    <title>Alassane Sedgo | Portfolio professionnel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="header">
+        <div class="navigation">
+
+            <a href="#accueil" class="logo">
+                AS<span>.</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="#accueil">Accueil</a>
+                <a href="#apropos">À propos</a>
+                <a href="#competences">Compétences</a>
+                <a href="#projets">Projets</a>
+                <a href="#contact" class="nav-contact">Me contacter</a>
+            </nav>
+
+        </div>
     </header>
+
     <main>
-      <!-- Section Accueil -->
-        <section id="accueil">
-            <h2 id="nom">Chargement...</h2>
-            <h3 id="titre"></h3>
-            <p id="description"></p>
-            <p id="email"></p>
-        </section>
-        <!-- Section Projets -->
-        <section id="projets">
-            <h2>Mes Projets</h2>
-            <div id="liste-projets">
-                <p>Chargement des projets...</p>
+
+        <!-- ACCUEIL -->
+        <section id="accueil" class="hero">
+
+            <div class="hero-container">
+
+                <div class="hero-content">
+
+                    <div class="availability">
+                        <span class="availability-dot"></span>
+                        Portfolio professionnel
+                    </div>
+
+                    <p class="hero-intro">BONJOUR, JE SUIS</p>
+
+                    <h1 id="nom">Chargement...</h1>
+
+                    <h2 id="titre"></h2>
+
+                    <p id="description" class="hero-description"></p>
+
+                    <p id="email" class="hero-email"></p>
+
+                    <div class="hero-buttons">
+                        <a href="#projets" class="btn btn-primary">
+                            Découvrir mes projets
+                        </a>
+
+                        <a href="#contact" class="btn btn-secondary">
+                            Me contacter
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="hero-visual">
+                    <div class="visual-circle circle-one"></div>
+                    <div class="visual-circle circle-two"></div>
+
+                    <div class="profile-card">
+                        <img
+    src="images/IMG_2894.PNG"
+    alt="Photo professionnelle d'Alassane Sedgo"
+    class="profile-photo"
+>
+                        <div class="profile-card-bottom">
+                            <span>TECHNOLOGIES</span>
+                            <strong>Innovation & Développement</strong>
+                        </div>
+                    </div>
+
+                    <div class="floating-tag tag-one">
+                        <span>01</span> Réseaux informatiques
+                    </div>
+
+                    <div class="floating-tag tag-two">
+                        <span>02</span> Développement web
+                    </div>
+                </div>
+
             </div>
+
+            <div class="hero-bottom">
+                <span>EXPLORER MON UNIVERS</span>
+                <a href="#apropos">↓</a>
+            </div>
+
         </section>
-        <!-- Section Contact -->
-        <section id="contact">
-          <h1>Contactez-moi</h1>
-          <form id="form-contact">
-            <input type="text" id="nom-contact" placeholder="Votre nom" required />
-            <input type="email" id="email-contact" placeholder="Votre email" required />
-            <input type="text" id="sujet-contact" placeholder="Sujet" required />
-            <textarea id="message-contact" placeholder="Votre message" required></textarea>
-            <button type="submit">Envoyer le message</button>
-          </form>
+
+        <!-- A PROPOS -->
+        <section id="apropos" class="about section-container">
+
+            <div class="section-heading">
+                <span class="section-label">QUI SUIS-JE ?</span>
+                <h2>À propos de moi</h2>
+                <p>
+                    Découvrez mon parcours, mes centres d'intérêt
+                    et ma passion pour les technologies numériques.
+                </p>
+            </div>
+
+            <div class="about-content">
+
+                <div class="about-number">
+                    <span>AS</span>
+                    <p>Passionné par les technologies</p>
+                </div>
+
+                <div class="about-text">
+                    <h3>Créer, apprendre et innover.</h3>
+
+                    <p>
+                        Je m'intéresse particulièrement aux réseaux informatiques,
+                        à la maintenance informatique et au développement web.
+                        Mon objectif est de mettre mes compétences au service
+                        de solutions numériques utiles et performantes.
+                    </p>
+
+                    <a href="#contact" class="text-link">
+                        Discutons de votre projet →
+                    </a>
+                </div>
+
+            </div>
+
         </section>
+
+<!-- COMPETENCES -->
+<section id="competences" class="skills-section">
+
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span class="section-label">MON SAVOIR-FAIRE</span>
+            <h2>Mes compétences</h2>
+            <p>
+                Les domaines techniques dans lesquels je développe
+                mes connaissances et mon expertise.
+            </p>
+        </div>
+
+        <div id="liste-competences" class="skills-grid">
+    <p>Chargement des compétences...</p>
+</div>
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- PROJETS -->
+        <section id="projets" class="projects-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+                    <span class="section-label">MON TRAVAIL</span>
+                    <h2>Mes projets</h2>
+                    <p>
+                        Quelques réalisations et applications développées
+                        dans le cadre de mes activités.
+                    </p>
+                </div>
+
+                <div id="liste-projets" class="projects-grid">
+                    <p>Chargement des projets...</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="contact-section">
+
+            <div class="section-container contact-container">
+
+                <div class="contact-intro">
+                    <span class="section-label">ENTRONS EN CONTACT</span>
+
+                    <h2>
+                        Un projet en tête ?
+                        <span>Parlons-en.</span>
+                    </h2>
+
+                    <p>
+                        Vous avez une idée, une collaboration ou une
+                        opportunité à me proposer ? Envoyez-moi un message.
+                    </p>
+                </div>
+
+                <div class="contact-form-container">
+
+                    <form id="form-contact">
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+                                <label for="nom-contact">Votre nom</label>
+                                <input
+                                    type="text"
+                                    id="nom-contact"
+                                    placeholder="Ex : Jean"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email-contact">Votre adresse e-mail</label>
+                                <input
+                                    type="email"
+                                    id="email-contact"
+                                    placeholder="Ex : jean@email.com"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sujet-contact">Sujet</label>
+                            <input
+                                type="text"
+                                id="sujet-contact"
+                                placeholder="Objet de votre demande"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message-contact">Votre message</label>
+                            <textarea
+                                id="message-contact"
+                                rows="6"
+                                placeholder="Écrivez votre message ici..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary submit-button">
+                            Envoyer mon message →
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
+
+    <!-- PIED DE PAGE -->
+    <footer class="footer">
+
+        <div class="footer-content">
+
+            <a href="#accueil" class="logo">
+                AS<span>.</span>
+            </a>
+
+            <p>© 2026 Alassane Sedgo. Tous droits réservés.</p>
+
+            <a href="#accueil" class="back-top">
+                Retour en haut ↑
+            </a>
+
+        </div>
+
+    </footer>
+
     <script src="js/app.js"></script>
-  </body>
+
+</body>
 </html>

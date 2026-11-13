@@ -1,3 +1,4 @@
+
 const Database = require("better-sqlite3");
 const path = require("path");
 
@@ -34,9 +35,16 @@ db.exec(`
         date DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS competences (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        titre TEXT NOT NULL,
+        description TEXT NOT NULL,
+        categorie TEXT
+    );
+
 `);
 
 console.log("Base de données connectée !");
-console.log("Les trois tables ont été créées ou vérifiées !");
+console.log("Les quatre tables ont été créées ou vérifiées !");
 
 module.exports = db;

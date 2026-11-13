@@ -1,5 +1,4 @@
 
- 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -18,19 +17,107 @@
     </header>
 
     <main>
+
+        <!-- STATISTIQUES -->
+        <section id="statistiques">
+            <h2>Vue d'ensemble</h2>
+
+            <div class="cartes-statistiques">
+
+                <div class="carte-statistique">
+                    <h3 id="total-projets">0</h3>
+                    <p>Projets publiés</p>
+                </div>
+
+                <div class="carte-statistique">
+                    <h3 id="total-messages">0</h3>
+                    <p>Messages reçus</p>
+                </div>
+
+                <div class="carte-statistique">
+                    <h3 id="profil-configure">Non</h3>
+                    <p>Profil configuré</p>
+                </div>
+
+                <div class="carte-statistique">
+                    <h3 id="total-competences">0</h3>
+                    <p>Compétences</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- GESTION DU PROFIL -->
+        <section id="gestion-profil">
+            <h2>Mon profil</h2>
+
+            <form id="form-profil">
+
+                <input
+                    type="text"
+                    id="nom-profil"
+                    placeholder="Nom et prénom"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="titre-profil"
+                    placeholder="Titre professionnel"
+                    required
+                >
+
+                <textarea
+                    id="description-profil"
+                    placeholder="Présente-toi en quelques phrases"
+                ></textarea>
+
+                <input
+                    type="email"
+                    id="email-profil"
+                    placeholder="Adresse e-mail"
+                >
+
+                <button type="submit">Enregistrer mon profil</button>
+
+            </form>
+
+            <p id="message-profil"></p>
+        </section>
+
+        <!-- GESTION DES PROJETS -->
         <section>
             <h2>Ajouter un projet</h2>
 
             <form id="form-projet">
-                <input type="text" id="titre" placeholder="Titre du projet" required>
 
-                <textarea id="description" placeholder="Description" required></textarea>
+                <input
+                    type="text"
+                    id="titre"
+                    placeholder="Titre du projet"
+                    required
+                >
 
-                <input type="text" id="technologies" placeholder="Technologies utilisées">
+                <textarea
+                    id="description"
+                    placeholder="Description"
+                    required
+                ></textarea>
 
-                <input type="url" id="lien" placeholder="Lien du projet">
+                <input
+                    type="text"
+                    id="technologies"
+                    placeholder="Technologies utilisées"
+                >
+
+                <input
+                    type="url"
+                    id="lien"
+                    placeholder="Lien du projet"
+                >
 
                 <button type="submit">Ajouter le projet</button>
+
             </form>
         </section>
 
@@ -38,10 +125,61 @@
             <h2>Mes projets enregistrés</h2>
             <div id="liste-projets"></div>
         </section>
+
+        <!-- GESTION DES COMPETENCES -->
+        <section id="gestion-competences">
+
+            <h2>Ajouter une compétence</h2>
+
+            <form id="form-competence">
+
+                <input
+                    type="text"
+                    id="titre-competence"
+                    placeholder="Nom de la compétence"
+                    required
+                >
+
+                <textarea
+                    id="description-competence"
+                    placeholder="Description de la compétence"
+                    required
+                ></textarea>
+
+                <input
+                    type="text"
+                    id="categorie-competence"
+                    placeholder="Catégorie (ex : Réseaux, Développement web)"
+                >
+
+                <button type="submit">Ajouter la compétence</button>
+
+            </form>
+
+            <p id="message-competence"></p>
+
+        </section>
+
+        <section>
+            <h2>Mes compétences enregistrées</h2>
+
+            <div id="liste-competences-admin">
+                <p>Chargement des compétences...</p>
+            </div>
+        </section>
+
+        <!-- MESSAGES RECUS -->
+        <section>
+            <h2>Messages reçus</h2>
+
+            <div id="liste-messages">
+                <p>Chargement des messages...</p>
+            </div>
+        </section>
+
     </main>
 
     <script src="js/admin.js"></script>
 
 </body>
 </html>
-
